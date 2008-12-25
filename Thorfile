@@ -3,6 +3,8 @@ require 'rubygems'
 require 'yaml'
 require 'activerecord'
 
+require 'db/config'
+
 
 class Db < Thor
 
@@ -42,13 +44,6 @@ class Db < Thor
   
   private
 
-  def load_config
-    ActiveRecord::Base.configurations[:default] = {
-      'adapter' => 'sqlite3',
-      'database' => 'db/data.sqlite3'
-    }
-  end
-  
   def config
     ActiveRecord::Base.configurations[:default]
   end
