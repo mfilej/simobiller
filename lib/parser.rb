@@ -21,8 +21,9 @@ module Parser
     end
     
     def attributes
-      %w(happened_at, description, number, operator, duration, amount).inject({}) do |hash, attr|
+      %w(happened_at description number operator duration amount).inject({}) do |hash, attr|
         hash[attr.intern] = send(attr)
+        hash
       end
     end
     
@@ -46,12 +47,28 @@ module Parser
     end
   
     def duration
-      hms = @xml.at('./Trajanje').content.split(':').map(&:to_i)
-      hms[0].hours + hms[1].minutes + hms[2].seconds
+      case dur = @xml.at('./Trajanje').content
+      when /KB$/
+        parse_into_kilobytes(dur)
+      else
+        parse_into_seconds(dur)
+      end
     end
   
     def amount
       @xml.at('./EUR').content.to_f
+    end
+    
+    private
+    
+    def parse_into_seconds(str)
+      hms = str.split ':'
+      hms.map! &:to_i
+      hms[0].hours + hms[1].minutes + hms[2].seconds
+    end
+    
+    def parse_into_kilobytes(str)
+      str[0..-3].tr(',','.').to_f.kilobytes
     end
   end
 end

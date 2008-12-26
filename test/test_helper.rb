@@ -5,13 +5,13 @@ require 'matchy'
 
 require '../lib/parser'
 
-class UserTest < Test::Unit::TestCase
+class ParserTest < Test::Unit::TestCase
 
   include Parser
 
   def test_should_find_entries
     entries = Invoice.new(fixtures[:entries]).entries
-    assert_equal 2, entries.size
+    assert_equal 3, entries.size
   end
   
   def test_should_find_entry_time
@@ -26,7 +26,7 @@ class UserTest < Test::Unit::TestCase
   
   def test_should_find_number
     entry = Invoice.new(fixtures[:entries]).entries.first
-    assert_equal '25003818704', entry.number
+    assert_equal '25081084730', entry.number
   end
   
   def test_should_find_operator
@@ -34,9 +34,14 @@ class UserTest < Test::Unit::TestCase
     assert_equal 'KENSA', entry.operator
   end
   
-  def test_should_find_duration
+  def test_should_find_duration_in_seconds
     entry = Invoice.new(fixtures[:entries]).entries.first
     assert_equal 88, entry.duration
+  end
+  
+  def test_should_find_duration_in_kilobytes
+    entry = Invoice.new(fixtures[:entries]).entries.last
+    assert_equal 354.62.kilobytes, entry.duration
   end
   
   def test_should_find_amount
@@ -54,7 +59,7 @@ class UserTest < Test::Unit::TestCase
 <Datum>21.11.</Datum>
 <Ura>07:37</Ura>
 <Opis>Klic v tujini</Opis>
-<Stevilka>25003818704</Stevilka>
+<Stevilka>25081084730</Stevilka>
 <Operater>KENSA</Operater>
 <Trajanje>00:01:28</Trajanje>
 <EUR>000006.2500</EUR>
@@ -67,6 +72,15 @@ class UserTest < Test::Unit::TestCase
 <Operater>KENSA</Operater>
 <Trajanje>00:00:00</Trajanje>
 <EUR>000000.3167</EUR>
+</Zapis>
+<Zapis>
+<Datum>16.12.</Datum>
+<Ura>15:22</Ura>
+<Opis>Prenos podatkov</Opis>
+<Stevilka>INTERNET.SIMOBIL.SI</Stevilka>
+<Operater>SVNSM</Operater>
+<Trajanje>354,62KB</Trajanje>
+<EUR>000000.1200</EUR>
 </Zapis>
 EOS
   end
