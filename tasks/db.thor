@@ -3,7 +3,14 @@ require 'db/config'
 
 class Db < Thor
 
-  desc 'create database', "creates the sqlite database file"
+  desc 'reset database', 'drops, creates. and migrates the database'
+  def reset
+    %w(drop create migrate).each do |task|
+      Db.start([task])
+    end
+  end
+
+  desc 'create database', 'creates the sqlite database file'
   def create
     if File.exist?(config['database'])
       $stderr.puts "#{config['database']} already exists"
