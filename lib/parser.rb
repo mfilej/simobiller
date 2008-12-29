@@ -48,10 +48,12 @@ module Parser
   
     def duration
       case dur = @xml.at('./Trajanje').content
-      when /KB$/
-        parse_into_kilobytes(dur)
+      when /(\d{2}):(\d{2}):(\d{2})/
+        hms_into_seconds($1, $2, $3)
+      when /(\d+,\d{2})([MK]B)/
+        parse_into_bytes($1, $2)
       else
-        parse_into_seconds(dur)
+        raise %(Could not parse duration: #{dur}\nXML dump:\n#{@xml.to_s}\n)
       end
     end
   
@@ -61,14 +63,16 @@ module Parser
     
     private
     
-    def parse_into_seconds(str)
-      hms = str.split ':'
-      hms.map! &:to_i
-      hms[0].hours + hms[1].minutes + hms[2].seconds
+    def hms_into_seconds(h, m, s)
+      h.to_i.hours + m.to_i.minutes + s.to_i
     end
     
-    def parse_into_kilobytes(str)
-      str[0..-3].tr(',','.').to_f.kilobytes
+    def parse_into_bytes(size, unit)
+      size = size.tr(',','.').to_f
+      case unit
+      when 'MB' then size.megabytes
+      when 'KB' then size.kilobytes
+      end      
     end
   end
 end
