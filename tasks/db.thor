@@ -10,7 +10,7 @@ class Db < Thor
     end
   end
 
-  desc 'create database', 'creates the sqlite database file'
+  desc 'create', 'creates the sqlite database file'
   def create
     if File.exist?(config['database'])
       $stderr.puts "#{config['database']} already exists"
@@ -27,13 +27,14 @@ class Db < Thor
     end
   end
 
-  desc 'migrate database', 'migrates the database (target specific version with VERSION=x)'
+  desc 'migrate', 'migrates the database'
+  method_options :version => :optional
   def migrate
     load_environment
-    ActiveRecord::Migrator.migrate('db/migrate', ENV['VERSION'] ? ENV['VERSION'].to_i : nil)
+    ActiveRecord::Migrator.migrate('db/migrate', options[:version] ? options[:version].to_i : nil)
   end
 
-  desc 'drop database', 'removes the sqlite database file'
+  desc 'drop', 'removes the sqlite database file'
   def drop
     if system %(rm #{config['database']})
       puts "Successfuly removed database file: #{config['database']}"
