@@ -1,15 +1,14 @@
 require 'activesupport'
-require 'nokogiri'
 
 module Parser
   class Invoice
     def initialize(doc)
       @document = doc
-      @xml = Nokogiri::XML(@document)
+      @xml = Hpricot.XML(@document)
     end
   
     def entries
-      @entries = @xml.xpath('/Specifikacija/Klicane_St./Zapis').map do |entry|
+      @entries = @xml.search('Zapis').map do |entry|
         Entry.new(entry)
       end
     end
@@ -29,28 +28,28 @@ module Parser
     
     def happened_at
       year = 2008 # invoice.filename.split('_').second.first(2)
-      day, month = @xml.at('./Datum').content.split('.')
-      hours, minutes = @xml.at('./Ura').content.split(':')
+      day, month = @xml.at('Datum').inner_text.split('.')
+      hours, minutes = @xml.at('Ura').inner_text.split(':')
       Time.mktime(year, month, day, hours, minutes)
     end
   
     def description
-      @xml.at('./Opis').content
+      @xml.at('Opis').inner_text
     end
   
     def number
-      @xml.at('./Stevilka').content
+      @xml.at('Stevilka').inner_text
     end
   
     def operator
-      @xml.at('./Operater').content
+      @xml.at('Operater').inner_text
     end
   
     def duration
-      case dur = @xml.at('./Trajanje').content
+      case dur = @xml.at('Trajanje').inner_text
       when /(\d{2}):(\d{2}):(\d{2})/
         hms_into_seconds($1, $2, $3)
-      when /(\d+,\d{2})([MK]B)/
+      when /(\d+,\d+)([MK]B)/
         parse_into_bytes($1, $2)
       else
         raise %(Could not parse duration: #{dur}\nXML dump:\n#{@xml.to_s}\n)
@@ -58,7 +57,7 @@ module Parser
     end
   
     def amount
-      @xml.at('./EUR').content.to_f
+      @xml.at('EUR').inner_text.to_f
     end
     
     private

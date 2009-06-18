@@ -1,7 +1,5 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
-require '../lib/parser'
-
 class ParserTest < Test::Unit::TestCase
 
   include Parser

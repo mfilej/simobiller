@@ -1,6 +1,7 @@
 require 'rubygems'
-
 require 'activerecord'
+require 'hpricot'
+
 require 'db/config'
 
 require 'invoice'
