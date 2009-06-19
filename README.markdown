@@ -11,3 +11,9 @@
 Setup passenger or simply run
 
     ruby site.rb
+
+for a quick glance through the web interface or run
+
+    ./console
+
+to make queries by yourself.
