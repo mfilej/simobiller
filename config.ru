@@ -1,3 +1,4 @@
+require 'sinatra'
 require 'site'
 
-Simobiller::Site.run!
+run Simobiller::Site

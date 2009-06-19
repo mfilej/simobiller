@@ -46,3 +46,6 @@ class Simobiller::Site < Sinatra::Base
   end
   
 end
+
+
+Simobiller::Site.run! if $0 == __FILE__
