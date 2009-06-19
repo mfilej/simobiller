@@ -1,6 +1,7 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), 'lib')
 require 'simobiller'
 require 'sinatra/base'
+require 'haml'
 
 class Simobiller::Site < Sinatra::Base
 
