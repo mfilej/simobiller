@@ -1,8 +1,6 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), 'lib')
 require 'simobiller'
-
 require 'sinatra/base'
-require 'map_by_method'
 
 class Simobiller::Site < Sinatra::Base
 
