@@ -1,0 +1,21 @@
+!!!
+%html
+  %head
+    %title Simobiller
+    %meta{ :'http-equiv' => 'content-type', :content => 'text/html; charset=utf8'}
+  %body
+    %ol
+      - invoices.each do |invoice|
+        %li
+          %a{ :href => "?ids=#{toggle_invoice_ids(invoice)}" }
+            = invoice.date
+            = "✔" if current_invoices.include?(invoice)
+          
+  
+
+    %table
+      - entries.each do |num, am|
+        %tr
+          %th= num
+          %td= "%0.2f" % am
+ 

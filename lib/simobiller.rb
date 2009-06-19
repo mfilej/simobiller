@@ -10,3 +10,6 @@ require 'parser'
 
 
 ActiveRecord::Base.establish_connection(ActiveRecord::Base.configurations[:default])
+
+module Simobiller
+end
